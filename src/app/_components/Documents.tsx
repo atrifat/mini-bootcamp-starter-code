@@ -55,23 +55,22 @@ export function Documents() {
       />
 
       {/* Render all uploaded documents. */}
-      {documents &&
-        documents.map((document) => (
-          <div
-            className="mb-4 rounded-xl border bg-white/5 p-4 text-white"
-            key={document.id}
-          >
-            <p>{document.name}</p>
-            <p>Pages</p>
-            {/* Render each page of the document. */}
-            {document.pages.map((page) => (
-              <div key={page.id}>
-                <p>Page {page.pageNumber}</p>
-                <p>{page.content}</p>
-              </div>
-            ))}
-          </div>
-        ))}
+      {documents?.map((document) => (
+        <div
+          className="mb-4 rounded-xl border bg-white/5 p-4 text-white"
+          key={document.id}
+        >
+          <p>{document.name}</p>
+          <p>Pages</p>
+          {/* Render each page of the document. */}
+          {document.pages.map((page) => (
+            <div key={page.id}>
+              <p>Page {page.pageNumber}</p>
+              <p>{page.content}</p>
+            </div>
+          ))}
+        </div>
+      ))}
     </div>
   );
 }
