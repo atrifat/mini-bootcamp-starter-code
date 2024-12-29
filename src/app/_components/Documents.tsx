@@ -26,6 +26,17 @@ export function Documents() {
     },
   });
 
+  const deleteDocument = api.document.delete.useMutation({
+    onSuccess: async () => {
+      // Refetch documents after successful deletion.
+      await refetchDocuments();
+    },
+    onError: (error) => {
+      // Log any errors that occur during document deletion.
+      console.error("Error deleting document:", error);
+    },
+  });
+
   return (
     <div>
       {/* Upload button to upload new documents. */}
@@ -69,6 +80,12 @@ export function Documents() {
               <p>{page.content}</p>
             </div>
           ))}
+          <button
+            className="mb-2 mt-2 rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700"
+            onClick={() => deleteDocument.mutateAsync({ id: document.id })}
+          >
+            Delete
+          </button>
         </div>
       ))}
     </div>

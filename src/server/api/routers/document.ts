@@ -108,6 +108,50 @@ export const documentRouter = createTRPCRouter({
         );
       }
     }),
+  delete: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      try {
+        // Will be implemented later. For now, assume it's a simple check.
+        // Check if the user has permission to delete documents.
+        // const hasPermission = await checkUserPermission();
+        const hasPermission = true;
+
+        console.log("Delete document with id:", input.id);
+
+        if (!hasPermission) {
+          throw new Error(
+            "You do not have permission to delete this document.",
+          );
+        }
+
+        // Delete pages associated with the document.
+        const deletedPages = await ctx.db
+          .delete(pages)
+          .where(eq(pages.documentId, input.id));
+
+        if (!deletedPages) {
+          throw new Error(
+            "Failed to delete pages associated with the document.",
+          );
+        }
+
+        // Delete the document itself.
+        const deletedDocument = await ctx.db
+          .delete(documents)
+          .where(eq(documents.id, input.id));
+
+        if (!deletedDocument) {
+          throw new Error("Failed to delete document.");
+        }
+        return deletedDocument;
+      } catch (error) {
+        console.error("Error deleting document:", error);
+        throw new Error(
+          "Failed to delete document: " + (error as Error).message,
+        );
+      }
+    }),
   getAll: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.db.query.documents.findMany({
       where: eq(documents.createdById, ctx.session.user.id),
