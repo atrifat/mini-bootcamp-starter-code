@@ -203,7 +203,7 @@ export const documentRouter = createTRPCRouter({
 
         // console.log("Document result:", JSON.stringify(documentResult, null, 2));
 
-        const associatedPagesId = documentResult?.pages.map(page => page.id) || [];
+        const associatedPagesId = documentResult?.pages.map(page => page.id) ?? [];
         // const associatedAudioFilesId = documentResult?.pages.flatMap(page => page.audioFiles).map(audioFile => audioFile.id) ?? [];
 
         // Delete audio files associated with the document.
