@@ -2,6 +2,7 @@
 
 import { UploadButton } from "~/utils/uploadthing";
 import { api } from "~/trpc/react";
+import { Pages } from "./Pages";
 
 /**
  * Component to display and manage documents.
@@ -74,12 +75,12 @@ export function Documents() {
           <p>{document.name}</p>
           <p>Pages</p>
           {/* Render each page of the document. */}
-          {document.pages.map((page) => (
-            <div key={page.id}>
-              <p>Page {page.pageNumber}</p>
-              <p>{page.content}</p>
-            </div>
-          ))}
+          <Pages
+            documentId={document.id}
+            pages={document.pages}
+            refetchDocuments={refetchDocuments}
+            voice={"my2nUXZc8WyNijMOfltw"}
+          />
           <button
             className="mb-2 mt-2 rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700"
             onClick={() => deleteDocument.mutateAsync({ id: document.id })}
