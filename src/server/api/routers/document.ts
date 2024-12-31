@@ -189,6 +189,36 @@ export const documentRouter = createTRPCRouter({
           );
         }
 
+        // Find the document to delete
+        const documentResult = await ctx.db.query.documents.findFirst({
+          where: eq(documents.id, input.id),
+          with: {
+            pages: {
+              with: {
+                audioFiles: true,
+              },
+            },
+          }
+        });
+
+        // console.log("Document result:", JSON.stringify(documentResult, null, 2));
+
+        const associatedPagesId = documentResult?.pages.map(page => page.id) || [];
+        // const associatedAudioFilesId = documentResult?.pages.flatMap(page => page.audioFiles).map(audioFile => audioFile.id) ?? [];
+
+        // Delete audio files associated with the document.
+        if (associatedPagesId.length > 0) {
+          const deletedAudioFiles = await ctx.db
+            .delete(audioFiles)
+            .where(inArray(audioFiles.pageId, associatedPagesId));
+
+          if (!deletedAudioFiles) {
+            throw new Error(
+              "Failed to delete audio files associated with the document.",
+            );
+          }
+        }
+
         // Delete pages associated with the document.
         const deletedPages = await ctx.db
           .delete(pages)
