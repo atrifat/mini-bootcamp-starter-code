@@ -72,21 +72,27 @@ export function Documents() {
           className="mb-4 rounded-xl border bg-white/5 p-4 text-white"
           key={document.id}
         >
-          <p>{document.name}</p>
-          <p>Pages</p>
+          <div className="flex items-center justify-between">
+            <div className="justify-left flex flex-col items-center">
+              <p>{document.name}</p>
+            </div>
+
+            <button
+              className="mb-2 mt-2 rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700"
+              onClick={() => deleteDocument.mutateAsync({ id: document.id })}
+            >
+              Delete
+            </button>
+          </div>
+
           {/* Render each page of the document. */}
           <Pages
             documentId={document.id}
+            documentName={document.name}
             pages={document.pages}
             refetchDocuments={refetchDocuments}
             voice={"my2nUXZc8WyNijMOfltw"}
           />
-          <button
-            className="mb-2 mt-2 rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700"
-            onClick={() => deleteDocument.mutateAsync({ id: document.id })}
-          >
-            Delete
-          </button>
         </div>
       ))}
     </div>
